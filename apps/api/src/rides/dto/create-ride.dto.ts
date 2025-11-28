@@ -9,12 +9,20 @@ export class CreateRideDto {
     @IsNotEmpty()
     destination: string;
 
+    @IsString()
+    @IsNotEmpty()
+    meeting_point: string;
+
+    @IsString()
+    @IsNotEmpty()
+    final_point: string;
+
     @IsDateString()
     departure_time: string;
 
     @IsNumber()
     @Min(1)
-    total_seats: number;
+    available_seats: number;
 
     @IsNumber()
     @Min(0)

@@ -12,6 +12,12 @@ export class Ride {
     @Column()
     destination: string;
 
+    @Column()
+    meeting_point: string;
+
+    @Column()
+    final_point: string;
+
     @Column({ type: 'timestamp' })
     departure_time: Date;
 

@@ -15,7 +15,7 @@ export class RidesService {
     async create(createRideDto: CreateRideDto, driver: User): Promise<Ride> {
         const ride = this.ridesRepository.create({
             ...createRideDto,
-            available_seats: createRideDto.total_seats,
+            total_seats: createRideDto.available_seats, // total_seats = available_seats al crear
             driver,
             driver_id: driver.id,
         });

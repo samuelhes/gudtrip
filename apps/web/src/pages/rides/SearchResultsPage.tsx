@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import { Car, MapPin, Users, DollarSign } from 'lucide-react';
+import { Car, MapPin, Users, DollarSign, ArrowRight } from 'lucide-react';
 
 interface Ride {
     id: string;
     origin: string;
     destination: string;
+    meeting_point: string;
+    final_point: string;
     departure_time: string;
     available_seats: number;
     price_tokens: number;
     driver: {
+        id: string;
         first_name: string;
         last_name: string;
     };
@@ -104,13 +107,25 @@ export const SearchResultsPage = () => {
                                                 </div>
                                             </div>
                                             <div className="flex-1 space-y-8">
-                                                <div className="flex items-center gap-2">
-                                                    <MapPin className="h-4 w-4 text-blue-600" />
-                                                    <span className="font-medium text-gray-900">{ride.origin}</span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <MapPin className="h-4 w-4 text-red-600" />
-                                                    <span className="font-medium text-gray-900">{ride.destination}</span>
+                                                <div className="flex items-start gap-3">
+                                                    <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                                            <span className="font-medium">{ride.origin}</span>
+                                                            <ArrowRight className="hidden sm:block h-4 w-4 text-gray-400" />
+                                                            <span className="font-medium">{ride.destination}</span>
+                                                        </div>
+                                                        {ride.meeting_point && (
+                                                            <p className="text-sm text-gray-600 mt-1">
+                                                                📍 Punto de encuentro: {ride.meeting_point}
+                                                            </p>
+                                                        )}
+                                                        {ride.final_point && (
+                                                            <p className="text-sm text-gray-600">
+                                                                🏁 Punto final: {ride.final_point}
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
