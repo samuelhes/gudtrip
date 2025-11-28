@@ -14,12 +14,12 @@ export const HomePage = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <div className="bg-blue-600 text-white py-20">
+            <div className="bg-blue-600 text-white py-12 md:py-20">
                 <div className="max-w-7xl mx-auto px-4 text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                    <h1 className="text-3xl md:text-6xl font-bold mb-6">
                         Tu viaje, tu comunidad.
                     </h1>
-                    <p className="text-xl md:text-2xl mb-10 text-blue-100">
+                    <p className="text-lg md:text-2xl mb-10 text-blue-100">
                         Comparte gastos, conoce gente y viaja cómodo con gudtrip.
                     </p>
 
@@ -59,6 +59,30 @@ export const HomePage = () => {
                             <Search className="w-5 h-5" />
                             Buscar
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* How it Works Section */}
+            <div className="bg-white py-16 border-b">
+                <div className="max-w-7xl mx-auto px-4">
+                    <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">¿Cómo funciona?</h2>
+                    <div className="grid md:grid-cols-3 gap-8 text-center">
+                        <div className="space-y-4">
+                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl font-bold mx-auto">1</div>
+                            <h3 className="text-xl font-bold">Busca o Publica</h3>
+                            <p className="text-gray-600">Encuentra un viaje que te sirva o publica tus asientos libres.</p>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl font-bold mx-auto">2</div>
+                            <h3 className="text-xl font-bold">Reserva y Paga</h3>
+                            <p className="text-gray-600">Usa tus tokens para reservar al instante. Sin efectivo, sin problemas.</p>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl font-bold mx-auto">3</div>
+                            <h3 className="text-xl font-bold">Viaja y Califica</h3>
+                            <p className="text-gray-600">Disfruta el viaje y califica a tu compañero para mantener la comunidad segura.</p>
+                        </div>
                     </div>
                 </div>
             </div>
