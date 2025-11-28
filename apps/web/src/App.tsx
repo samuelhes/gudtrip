@@ -8,6 +8,7 @@ import { PublishRidePage } from './pages/rides/PublishRidePage';
 import { SearchResultsPage } from './pages/rides/SearchResultsPage';
 import { WalletPage } from './pages/wallet/WalletPage';
 import { MyTripsPage } from './pages/trips/MyTripsPage';
+import { ProfilePage } from './pages/profile/ProfilePage';
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                             <Route element={<ProtectedRoute />}>
                                 <Route path="/wallet" element={<WalletPage />} />
                                 <Route path="/trips" element={<MyTripsPage />} />
+                                <Route path="/profile" element={<ProfilePage />} />
                             </Route>
                         </Route>
 

@@ -29,10 +29,10 @@ export const Navbar = () => {
                                 <Link to="/trips" className="text-gray-700 hover:text-blue-600 font-medium">
                                     Mis Viajes
                                 </Link>
-                                <div className="flex items-center gap-2 text-gray-700">
+                                <Link to="/profile" className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors">
                                     <User className="h-5 w-5" />
-                                    <span>{user.first_name}</span>
-                                </div>
+                                    <span className="font-medium">{user.first_name}</span>
+                                </Link>
                                 <button onClick={logout} className="text-gray-500 hover:text-red-600">
                                     <LogOut className="h-5 w-5" />
                                 </button>
