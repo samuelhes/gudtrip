@@ -51,14 +51,14 @@ services:
         sync: false
 
   # Frontend Service (React/Vite)
-  - type: static
+  - type: web
     name: gudtrip-web
-    env: node
+    env: static
     buildCommand: npm install && npm run build -w apps/web
-    publishDir: apps/web/dist
+    staticPublishPath: apps/web/dist
     routes:
       - type: rewrite
-        source: /**
+        source: /*
         destination: /index.html
     envVars:
       - key: VITE_API_URL
