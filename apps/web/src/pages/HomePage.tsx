@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { CitySelector } from '../components/common/CitySelector';
 
 export const HomePage = () => {
     const navigate = useNavigate();
     const [search, setSearch] = useState({ origin: '', destination: '', date: '' });
 
     const handleSearch = () => {
-        navigate(`/ search ? origin = ${search.origin}& destination=${search.destination}& date=${search.date} `);
+        navigate(`/search?origin=${search.origin}&destination=${search.destination}&date=${search.date}`);
     };
 
     return (
@@ -25,24 +26,20 @@ export const HomePage = () => {
                     {/* Search Box */}
                     <div className="bg-white p-4 rounded-2xl shadow-lg max-w-4xl mx-auto flex flex-col md:flex-row gap-4">
                         <div className="flex-1">
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1 text-left">Origen</label>
-                            <input
-                                type="text"
-                                placeholder="¿De dónde sales?"
-                                className="w-full p-2 text-gray-900 font-semibold focus:outline-none"
+                            <CitySelector
                                 value={search.origin}
-                                onChange={(e) => setSearch({ ...search, origin: e.target.value })}
+                                onChange={(value) => setSearch({ ...search, origin: value })}
+                                placeholder="¿De dónde sales?"
+                                label="Origen"
                             />
                         </div>
                         <div className="w-px bg-gray-200 hidden md:block"></div>
                         <div className="flex-1">
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1 text-left">Destino</label>
-                            <input
-                                type="text"
-                                placeholder="¿A dónde vas?"
-                                className="w-full p-2 text-gray-900 font-semibold focus:outline-none"
+                            <CitySelector
                                 value={search.destination}
-                                onChange={(e) => setSearch({ ...search, destination: e.target.value })}
+                                onChange={(value) => setSearch({ ...search, destination: value })}
+                                placeholder="¿A dónde vas?"
+                                label="Destino"
                             />
                         </div>
                         <div className="w-px bg-gray-200 hidden md:block"></div>
@@ -50,7 +47,7 @@ export const HomePage = () => {
                             <label className="block text-xs font-bold text-gray-500 uppercase mb-1 text-left">Fecha</label>
                             <input
                                 type="date"
-                                className="w-full p-2 text-gray-900 font-semibold focus:outline-none"
+                                className="w-full p-2 text-gray-900 font-semibold focus:outline-none rounded-lg border border-gray-200"
                                 value={search.date}
                                 onChange={(e) => setSearch({ ...search, date: e.target.value })}
                             />
