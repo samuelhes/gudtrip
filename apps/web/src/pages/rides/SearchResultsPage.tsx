@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { Car, MapPin, Users, DollarSign, ArrowRight } from 'lucide-react';
+import { ResponsiveModal } from '../../components/common/ResponsiveModal';
 
 interface Ride {
     id: string;
@@ -93,8 +94,8 @@ export const SearchResultsPage = () => {
                 ) : (
                     <div className="space-y-4">
                         {rides.map((ride) => (
-                            <div key={ride.id} className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow">
-                                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-0">
+                            <div key={ride.id} className="bg-white rounded-xl shadow-sm border p-4 sm:p-6 hover:shadow-md transition-shadow">
+                                <div className="flex flex-col gap-4">
                                     <div className="space-y-4 flex-1 w-full">
                                         <div className="flex items-center gap-4">
                                             <div className="flex flex-col items-center">
@@ -142,7 +143,7 @@ export const SearchResultsPage = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto sm:h-full sm:pl-6 sm:border-l sm:ml-6 pt-4 sm:pt-0 border-t sm:border-t-0">
+                                    <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between w-full gap-3 pt-4 border-t sm:w-auto sm:h-full sm:pl-6 sm:border-l sm:border-t-0 sm:ml-6 sm:pt-0">
                                         <div className="text-2xl font-bold text-blue-600 flex items-center">
                                             <DollarSign className="h-6 w-6" />
                                             {ride.price_tokens}
@@ -150,7 +151,7 @@ export const SearchResultsPage = () => {
                                         <button
                                             onClick={() => handleBookClick(ride)}
                                             disabled={bookingLoading === ride.id || ride.available_seats === 0}
-                                            className="sm:mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-touch w-full xs:w-auto"
                                         >
                                             {bookingLoading === ride.id ? 'Reservando...' : 'Reservar'}
                                         </button>
@@ -163,10 +164,14 @@ export const SearchResultsPage = () => {
             </div>
 
             {/* Confirm Booking Modal */}
-            {showConfirmModal && selectedRide && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
-                    <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6">
-                        <h3 className="text-xl font-bold text-gray-900">Confirmar Reserva</h3>
+            <ResponsiveModal
+                isOpen={showConfirmModal && !!selectedRide}
+                onClose={() => setShowConfirmModal(false)}
+                title="Confirmar Reserva"
+                size="md"
+            >
+                {selectedRide && (
+                    <div className="space-y-6">
                         <p className="text-gray-600">
                             Estás a punto de reservar un asiento para el viaje de <b>{selectedRide.origin}</b> a <b>{selectedRide.destination}</b>.
                         </p>
@@ -174,53 +179,55 @@ export const SearchResultsPage = () => {
                             <span className="text-blue-800 font-medium">Total a pagar</span>
                             <span className="text-2xl font-bold text-blue-600">{selectedRide.price_tokens} Tokens</span>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
                             <button
                                 onClick={() => setShowConfirmModal(false)}
-                                className="flex-1 py-3 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50"
+                                className="flex-1 py-3 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50 touch-manipulation min-h-touch"
                             >
                                 Cancelar
                             </button>
                             <button
                                 onClick={confirmBooking}
                                 disabled={!!bookingLoading}
-                                className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50"
+                                className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50 touch-manipulation min-h-touch"
                             >
                                 {bookingLoading ? 'Procesando...' : 'Confirmar Pago'}
                             </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </ResponsiveModal>
 
             {/* Insufficient Funds Modal */}
-            {showFundsModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6 text-center">
-                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-                            <DollarSign className="w-8 h-8 text-red-600" />
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900">Saldo Insuficiente</h3>
-                        <p className="text-gray-600">
-                            No tienes suficientes tokens en tu billetera para realizar esta reserva.
-                        </p>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setShowFundsModal(false)}
-                                className="flex-1 py-3 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50"
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={() => navigate('/wallet')}
-                                className="flex-1 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700"
-                            >
-                                Recargar Billetera
-                            </button>
-                        </div>
+            <ResponsiveModal
+                isOpen={showFundsModal}
+                onClose={() => setShowFundsModal(false)}
+                title="Saldo Insuficiente"
+                size="md"
+            >
+                <div className="space-y-6 text-center">
+                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+                        <DollarSign className="w-8 h-8 text-red-600" />
+                    </div>
+                    <p className="text-gray-600">
+                        No tienes suficientes tokens en tu billetera para realizar esta reserva.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <button
+                            onClick={() => setShowFundsModal(false)}
+                            className="flex-1 py-3 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50 touch-manipulation min-h-touch"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={() => navigate('/wallet')}
+                            className="flex-1 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 touch-manipulation min-h-touch"
+                        >
+                            Recargar Billetera
+                        </button>
                     </div>
                 </div>
-            )}
+            </ResponsiveModal>
         </div>
     );
 };

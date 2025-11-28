@@ -61,12 +61,13 @@ export const Navbar = () => {
                     <div className="flex items-center md:hidden">
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                            className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 -mr-2 touch-manipulation min-h-touch min-w-touch flex items-center justify-center"
+                            aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
                         >
                             {isMenuOpen ? (
-                                <X className="h-6 w-6" />
+                                <X className="h-7 w-7" />
                             ) : (
-                                <Menu className="h-6 w-6" />
+                                <Menu className="h-7 w-7" />
                             )}
                         </button>
                     </div>
@@ -75,7 +76,7 @@ export const Navbar = () => {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-                <div className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg z-40">
+                <div className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg z-40 animate-fadeIn">
                     <div className="px-4 pt-2 pb-4 space-y-1">
                         {user ? (
                             <>

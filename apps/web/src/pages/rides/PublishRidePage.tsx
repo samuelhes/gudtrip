@@ -91,7 +91,7 @@ export const PublishRidePage = () => {
             <div className="max-w-2xl mx-auto">
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">Publicar Viaje</h2>
 
-                <form onSubmit={handlePreSubmit} className="bg-white rounded-2xl shadow-sm border p-8 space-y-6">
+                <form onSubmit={handlePreSubmit} className="bg-white rounded-2xl shadow-sm border p-6 sm:p-8 space-y-6">
                     <div>
                         <CitySelector
                             value={formData.origin}
@@ -109,7 +109,7 @@ export const PublishRidePage = () => {
                             type="text"
                             required
                             placeholder="Ej: Metro Manquehue, Jumbo Maitencillo"
-                            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 sm:px-4 py-3 sm:py-2.5 text-base border border-gray-300 rounded-xl focus:ring-blue-500 focus:border-blue-500 touch-manipulation"
                             value={formData.meeting_point}
                             onChange={(e) => setFormData({ ...formData, meeting_point: e.target.value })}
                         />

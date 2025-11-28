@@ -38,7 +38,7 @@ export const AdminDashboardPage = () => {
         <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-8">Dashboard General</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <div className="flex items-center justify-between mb-4">
                         <div className="bg-blue-100 p-3 rounded-xl">
@@ -80,7 +80,7 @@ export const AdminDashboardPage = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <div className="flex items-center justify-between mb-4">
                         <div className="bg-green-100 p-3 rounded-xl">

@@ -23,11 +23,11 @@ export const ProfilePage = () => {
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="bg-white rounded-2xl shadow-sm border p-8 flex items-center gap-6">
+                <div className="bg-white rounded-2xl shadow-sm border p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6">
                     <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-3xl font-bold">
                         {user.first_name?.[0] || user.email[0].toUpperCase()}
                     </div>
-                    <div>
+                    <div className="text-center sm:text-left w-full sm:w-auto">
                         <h1 className="text-2xl font-bold text-gray-900">{user.first_name} {user.last_name}</h1>
                         <p className="text-gray-500">{user.email}</p>
                         <div className="flex gap-2 mt-3">
@@ -88,7 +88,7 @@ export const ProfilePage = () => {
                         <button
                             onClick={handleRequestDriver}
                             disabled={requestingDriver}
-                            className="bg-white text-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition-colors w-full sm:w-auto"
+                            className="bg-white text-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition-colors w-full touch-manipulation min-h-touch"
                         >
                             {requestingDriver ? 'Enviando solicitud...' : 'Solicitar ser Conductor'}
                         </button>
