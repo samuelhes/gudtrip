@@ -29,16 +29,6 @@ services:
         fromDatabase:
           name: gudtrip-db
           property: password
-      - key: REDIS_HOST
-        fromService:
-          type: redis
-          name: gudtrip-redis
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: gudtrip-redis
-          property: port
       - key: JWT_SECRET
         generateValue: true
       - key: SMTP_HOST
