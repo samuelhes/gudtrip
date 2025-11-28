@@ -70,4 +70,41 @@ export class WalletService {
             await queryRunner.release();
         }
     }
+    async blockFunds(userId: string, amount: number, queryRunner?: any): Promise<void> {
+        const manager = queryRunner ? queryRunner.manager : this.dataSource.manager;
+        const wallet = await manager.findOne(Wallet, { where: { user_id: userId } });
+
+        if (!wallet || Number(wallet.balance) < amount) {
+            throw new BadRequestException('Insufficient funds');
+        }
+
+        wallet.balance = Number(wallet.balance) - Number(amount);
+        wallet.blocked_balance = Number(wallet.blocked_balance) + Number(amount);
+        await manager.save(wallet);
+    }
+
+    async releaseFunds(userId: string, amount: number, queryRunner?: any): Promise<void> {
+        const manager = queryRunner ? queryRunner.manager : this.dataSource.manager;
+        const wallet = await manager.findOne(Wallet, { where: { user_id: userId } });
+
+        if (!wallet) throw new BadRequestException('Wallet not found');
+
+        wallet.blocked_balance = Number(wallet.blocked_balance) - Number(amount);
+        wallet.balance = Number(wallet.balance) + Number(amount);
+        await manager.save(wallet);
+    }
+
+    async captureFunds(payerId: string, payeeId: string, amount: number, queryRunner?: any): Promise<void> {
+        const manager = queryRunner ? queryRunner.manager : this.dataSource.manager;
+        const payerWallet = await manager.findOne(Wallet, { where: { user_id: payerId } });
+        const payeeWallet = await manager.findOne(Wallet, { where: { user_id: payeeId } });
+
+        if (!payerWallet || !payeeWallet) throw new BadRequestException('Wallet not found');
+
+        payerWallet.blocked_balance = Number(payerWallet.blocked_balance) - Number(amount);
+        payeeWallet.balance = Number(payeeWallet.balance) + Number(amount);
+
+        await manager.save(payerWallet);
+        await manager.save(payeeWallet);
+    }
 }

@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Review } from './entities/review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -11,6 +11,7 @@ export class ReviewsService {
     constructor(
         @InjectRepository(Review)
         private reviewsRepository: Repository<Review>,
+        private dataSource: DataSource,
     ) { }
 
     async create(createReviewDto: CreateReviewDto, reviewer: User): Promise<Review> {
@@ -18,15 +19,38 @@ export class ReviewsService {
             throw new BadRequestException('Cannot review yourself');
         }
 
-        // TODO: Verify that the reviewer and reviewee actually shared a ride (via Booking)
-        // For prototype, we skip this check to speed up development.
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
 
-        const review = this.reviewsRepository.create({
-            ...createReviewDto,
-            reviewer,
-            reviewer_id: reviewer.id,
-        });
-        return this.reviewsRepository.save(review);
+        try {
+            const review = queryRunner.manager.create(Review, {
+                ...createReviewDto,
+                reviewer,
+                reviewer_id: reviewer.id,
+            });
+            await queryRunner.manager.save(review);
+
+            // Update User Reputation
+            const reviewee = await queryRunner.manager.findOne(User, { where: { id: createReviewDto.reviewee_id } });
+            if (reviewee) {
+                const newTotal = reviewee.total_reviews + 1;
+                // Calculate new average: (old_avg * old_total + new_rating) / new_total
+                const newAverage = ((reviewee.average_rating * reviewee.total_reviews) + createReviewDto.rating) / newTotal;
+
+                reviewee.total_reviews = newTotal;
+                reviewee.average_rating = parseFloat(newAverage.toFixed(2));
+                await queryRunner.manager.save(reviewee);
+            }
+
+            await queryRunner.commitTransaction();
+            return review;
+        } catch (err) {
+            await queryRunner.rollbackTransaction();
+            throw err;
+        } finally {
+            await queryRunner.release();
+        }
     }
 
     async findByUser(userId: string): Promise<Review[]> {

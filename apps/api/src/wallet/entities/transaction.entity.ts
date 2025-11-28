@@ -6,6 +6,7 @@ export enum TransactionType {
     WITHDRAWAL = 'WITHDRAWAL',
     PAYMENT = 'PAYMENT',
     REFUND = 'REFUND',
+    RESERVATION = 'RESERVATION',
 }
 
 @Entity('transactions')

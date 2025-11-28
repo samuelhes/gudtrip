@@ -29,11 +29,23 @@ export class User {
     @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
     status: UserStatus;
 
+    @Column({ default: false })
+    is_driver_requested: boolean;
+
+    @Column({ default: false })
+    is_driver_approved: boolean;
+
     @Column({ nullable: true })
     first_name: string;
 
     @Column({ nullable: true })
     last_name: string;
+
+    @Column({ type: 'float', default: 0 })
+    average_rating: number;
+
+    @Column({ type: 'int', default: 0 })
+    total_reviews: number;
 
     @CreateDateColumn()
     created_at: Date;

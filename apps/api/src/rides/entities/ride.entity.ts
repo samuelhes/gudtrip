@@ -1,6 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
+export enum RideStatus {
+    OPEN = 'OPEN',
+    FULL = 'FULL',
+    COMPLETED = 'COMPLETED',
+    CANCELLED = 'CANCELLED',
+}
+
 @Entity('rides')
 export class Ride {
     @PrimaryGeneratedColumn('uuid')
@@ -37,8 +44,8 @@ export class Ride {
     @Column()
     driver_id: string;
 
-    @Column({ default: 'OPEN' }) // OPEN, FULL, COMPLETED, CANCELLED
-    status: string;
+    @Column({ type: 'enum', enum: RideStatus, default: RideStatus.OPEN })
+    status: RideStatus;
 
     @CreateDateColumn()
     created_at: Date;

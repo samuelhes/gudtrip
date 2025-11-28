@@ -3,8 +3,12 @@ import { User } from '../../users/entities/user.entity';
 import { Ride } from '../../rides/entities/ride.entity';
 
 export enum BookingStatus {
+    PENDING_ACEPTACION_DRIVER = 'PENDING_ACEPTACION_DRIVER',
     CONFIRMED = 'CONFIRMED',
-    CANCELLED = 'CANCELLED',
+    REJECTED = 'REJECTED',
+    EXPIRADA = 'EXPIRADA',
+    CANCELLED_PASAJERO = 'CANCELLED_PASAJERO',
+    CANCELLED_DRIVER = 'CANCELLED_DRIVER',
     COMPLETED = 'COMPLETED',
 }
 

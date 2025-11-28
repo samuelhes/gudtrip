@@ -148,6 +148,7 @@ export const PublishRidePage = () => {
                         <input
                             type="datetime-local"
                             required
+                            step="300"
                             className="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-500 focus:border-blue-500"
                             value={formData.departure_time}
                             onChange={(e) => setFormData({ ...formData, departure_time: e.target.value })}

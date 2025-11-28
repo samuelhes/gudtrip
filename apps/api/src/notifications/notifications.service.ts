@@ -1,6 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Notification } from './entities/notification.entity';
 
 @Injectable()
 export class NotificationsService {
@@ -8,7 +11,11 @@ export class NotificationsService {
 
     private readonly logger = new Logger(NotificationsService.name);
 
-    constructor(private configService: ConfigService) {
+    constructor(
+        @InjectRepository(Notification)
+        private notificationsRepository: Repository<Notification>,
+        private configService: ConfigService
+    ) {
         // For development, we can use Ethereal or just log to console if no creds are provided
         // In production, we would use real SMTP credentials
         this.transporter = nodemailer.createTransport({
@@ -52,5 +59,32 @@ export class NotificationsService {
             this.logger.error('Error sending email:', error);
             // Don't throw error to avoid failing the booking transaction if email fails
         }
+    }
+    async sendMatchNotification(userId: string, ride: any) {
+        // In a real app, we would fetch the user to get the email
+        // For now, we'll just log it or send to a dummy email if we don't have the user object
+        this.logger.log(`Sending match notification to user ${userId} for ride ${ride.id}`);
+        // TODO: Implement actual email sending by fetching user email
+        // const user = await this.usersRepository.findOne(userId);
+        // if (user) {
+        //     await this.transporter.sendMail({ ... });
+        // }
+    }
+    async findAllForUser(userId: string) {
+        return this.notificationsRepository.find({
+            where: { user_id: userId },
+            order: { created_at: 'DESC' },
+        });
+    }
+
+    async markAsRead(id: string, userId: string) {
+        const notification = await this.notificationsRepository.findOne({ where: { id, user_id: userId } });
+        if (!notification) {
+            // throw new NotFoundException('Notification not found');
+            return null;
+        }
+        notification.is_read = true;
+        notification.read_at = new Date();
+        return this.notificationsRepository.save(notification);
     }
 }

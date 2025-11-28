@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Car, User, LogOut, Menu, X } from 'lucide-react';
+import { Car, User, LogOut, Menu, X, Bell } from 'lucide-react';
 
 import { useAuth } from '../../context/AuthContext';
 
@@ -36,6 +36,10 @@ export const Navbar = () => {
                                 <Link to="/profile" className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors">
                                     <User className="h-5 w-5" />
                                     <span className="font-medium">{user.first_name}</span>
+                                </Link>
+                                <Link to="/notifications" className="text-gray-700 hover:text-blue-600 font-medium relative">
+                                    <Bell className="h-5 w-5" />
+                                    {/* <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span> */}
                                 </Link>
                                 <button onClick={logout} className="text-gray-500 hover:text-red-600">
                                     <LogOut className="h-5 w-5" />

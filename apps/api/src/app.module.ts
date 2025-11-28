@@ -11,6 +11,8 @@ import { BookingsModule } from './bookings/bookings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AdminModule } from './admin/admin.module';
+import { TravelNeedsModule } from './travel-needs/travel-needs.module';
+import { DocumentsModule } from './documents/documents.module';
 
 @Module({
     imports: [
@@ -35,9 +37,10 @@ import { AdminModule } from './admin/admin.module';
         WalletModule,
         BookingsModule,
         ReviewsModule,
-        ReviewsModule,
         NotificationsModule,
         AdminModule,
+        TravelNeedsModule,
+        DocumentsModule,
     ],
     controllers: [],
     providers: [],
