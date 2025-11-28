@@ -33,4 +33,17 @@ export class UsersController {
         }
         return this.usersService.update(id, updateUserDto);
     }
+
+    // TEMPORARY: Endpoint to promote user to admin (for dev/setup only)
+    // In production, this should be protected or removed
+    @Get('promote-dev/:email')
+    async promoteToAdmin(@Param('email') email: string) {
+        const user = await this.usersService.findOneByEmail(email);
+        if (!user) {
+            return { message: 'User not found' };
+        }
+        user.roles = [UserRole.ADMIN, UserRole.DRIVER, UserRole.PASSENGER];
+        await this.usersService.save(user);
+        return { message: `User ${email} promoted to ADMIN`, user };
+    }
 }

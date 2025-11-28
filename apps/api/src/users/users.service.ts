@@ -38,4 +38,8 @@ export class UsersService {
         Object.assign(user, updateUserDto);
         return this.usersRepository.save(user);
     }
+
+    async save(user: User): Promise<User> {
+        return this.usersRepository.save(user);
+    }
 }
