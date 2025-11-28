@@ -65,7 +65,7 @@ services:
         fromService:
           type: web
           name: gudtrip-api
-          property: url
+          property: host
 
 databases:
   - name: gudtrip-db
