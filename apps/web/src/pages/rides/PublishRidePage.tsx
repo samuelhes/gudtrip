@@ -15,8 +15,38 @@ export const PublishRidePage = () => {
         price_tokens: 10
     });
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const [showModal, setShowModal] = useState(false);
+
+    const validateForm = () => {
+        const now = new Date();
+        const selectedDate = new Date(formData.departure_time);
+
+        if (selectedDate <= now) {
+            alert('La fecha de salida debe ser en el futuro');
+            return false;
+        }
+
+        if (formData.total_seats < 1) {
+            alert('Debe haber al menos 1 asiento disponible');
+            return false;
+        }
+
+        if (formData.price_tokens < 0) {
+            alert('El precio no puede ser negativo');
+            return false;
+        }
+
+        return true;
+    };
+
+    const handlePreSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (validateForm()) {
+            setShowModal(true);
+        }
+    };
+
+    const handleConfirmPublish = async () => {
         setLoading(true);
         try {
             await api.post('/rides', {
@@ -30,6 +60,7 @@ export const PublishRidePage = () => {
             alert('Error al publicar el viaje');
         } finally {
             setLoading(false);
+            setShowModal(false);
         }
     };
 
@@ -38,7 +69,7 @@ export const PublishRidePage = () => {
             <div className="max-w-2xl mx-auto">
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">Publicar Viaje</h2>
 
-                <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border p-8 space-y-6">
+                <form onSubmit={handlePreSubmit} className="bg-white rounded-2xl shadow-sm border p-8 space-y-6">
                     <div>
                         <CitySelector
                             value={formData.origin}
@@ -108,10 +139,62 @@ export const PublishRidePage = () => {
                         disabled={loading}
                         className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-colors disabled:opacity-50"
                     >
-                        {loading ? 'Publicando...' : 'Publicar Viaje'}
+                        Continuar
                     </button>
                 </form>
             </div>
+
+            {/* Confirmation Modal */}
+            {showModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6">
+                        <h3 className="text-xl font-bold text-gray-900">Confirmar Viaje</h3>
+
+                        <div className="space-y-4 bg-gray-50 p-4 rounded-xl">
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Ruta</span>
+                                <span className="font-medium text-right">{formData.origin} ➝ {formData.destination}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Fecha</span>
+                                <span className="font-medium text-right">
+                                    {new Date(formData.departure_time).toLocaleString()}
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Precio por asiento</span>
+                                <span className="font-medium">{formData.price_tokens} Tokens</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Asientos</span>
+                                <span className="font-medium">{formData.total_seats}</span>
+                            </div>
+                            <div className="border-t pt-2 flex justify-between items-center">
+                                <span className="font-bold text-gray-900">Ganancia Estimada</span>
+                                <span className="text-xl font-bold text-green-600">
+                                    {formData.price_tokens * formData.total_seats} Tokens
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="flex-1 py-3 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleConfirmPublish}
+                                disabled={loading}
+                                className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50"
+                            >
+                                {loading ? 'Publicando...' : 'Confirmar y Publicar'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
