@@ -19,14 +19,13 @@ interface Ride {
 export const SearchResultsPage = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const [rides, setRides] = useState<Ride[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [bookingLoading, setBookingLoading] = useState<string | null>(null);
+    const [selectedRide, setSelectedRide] = useState<Ride | null>(null);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [showFundsModal, setShowFundsModal] = useState(false);
 
     useEffect(() => {
         const fetchRides = async () => {
             try {
-                // In a real app, we would pass search params to the API
                 const response = await api.get('/rides');
                 setRides(response.data);
             } catch (error) {
@@ -39,20 +38,32 @@ export const SearchResultsPage = () => {
         fetchRides();
     }, [searchParams]);
 
-    const handleBookRide = async (rideId: string) => {
-        if (!confirm('¿Estás seguro de que deseas reservar este viaje? Se descontarán los tokens de tu billetera.')) return;
+    const handleBookClick = (ride: Ride) => {
+        setSelectedRide(ride);
+        setShowConfirmModal(true);
+    };
 
-        setBookingLoading(rideId);
+    const confirmBooking = async () => {
+        if (!selectedRide) return;
+
+        setBookingLoading(selectedRide.id);
         try {
             await api.post('/bookings', {
-                ride_id: rideId,
-                seats: 1, // Default to 1 seat for now
+                ride_id: selectedRide.id,
+                seats: 1,
             });
-            alert('¡Reserva exitosa!');
+            setShowConfirmModal(false);
+            alert('¡Reserva exitosa! Buen viaje 🚗');
             navigate('/trips');
         } catch (error: any) {
             console.error('Error booking ride:', error);
-            alert(error.response?.data?.message || 'Error al reservar el viaje. Verifica tu saldo.');
+            setShowConfirmModal(false);
+
+            if (error.response?.data?.message === 'Insufficient funds') {
+                setShowFundsModal(true);
+            } else {
+                alert(error.response?.data?.message || 'Error al reservar el viaje.');
+            }
         } finally {
             setBookingLoading(null);
         }
@@ -86,7 +97,6 @@ export const SearchResultsPage = () => {
                                                 </div>
                                                 <div className="h-10 w-0.5 bg-gray-200 my-1"></div>
                                                 <div className="text-sm font-bold text-gray-500">
-                                                    {/* Calculate arrival time if available, otherwise hide */}
                                                     --:--
                                                 </div>
                                             </div>
@@ -120,7 +130,7 @@ export const SearchResultsPage = () => {
                                             {ride.price_tokens}
                                         </div>
                                         <button
-                                            onClick={() => handleBookRide(ride.id)}
+                                            onClick={() => handleBookClick(ride)}
                                             disabled={bookingLoading === ride.id || ride.available_seats === 0}
                                             className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
@@ -133,6 +143,66 @@ export const SearchResultsPage = () => {
                     </div>
                 )}
             </div>
+
+            {/* Confirm Booking Modal */}
+            {showConfirmModal && selectedRide && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6">
+                        <h3 className="text-xl font-bold text-gray-900">Confirmar Reserva</h3>
+                        <p className="text-gray-600">
+                            Estás a punto de reservar un asiento para el viaje de <b>{selectedRide.origin}</b> a <b>{selectedRide.destination}</b>.
+                        </p>
+                        <div className="bg-blue-50 p-4 rounded-xl flex justify-between items-center">
+                            <span className="text-blue-800 font-medium">Total a pagar</span>
+                            <span className="text-2xl font-bold text-blue-600">{selectedRide.price_tokens} Tokens</span>
+                        </div>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowConfirmModal(false)}
+                                className="flex-1 py-3 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={confirmBooking}
+                                disabled={!!bookingLoading}
+                                className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50"
+                            >
+                                {bookingLoading ? 'Procesando...' : 'Confirmar Pago'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Insufficient Funds Modal */}
+            {showFundsModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6 text-center">
+                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+                            <DollarSign className="w-8 h-8 text-red-600" />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900">Saldo Insuficiente</h3>
+                        <p className="text-gray-600">
+                            No tienes suficientes tokens en tu billetera para realizar esta reserva.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowFundsModal(false)}
+                                className="flex-1 py-3 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={() => navigate('/wallet')}
+                                className="flex-1 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700"
+                            >
+                                Recargar Billetera
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
