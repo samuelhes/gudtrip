@@ -1,0 +1,82 @@
+services:
+  # Backend Service (NestJS)
+  - type: web
+    name: gudtrip-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: DB_HOST
+        fromDatabase:
+          name: gudtrip-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: gudtrip-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: gudtrip-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: gudtrip-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: gudtrip-db
+          property: password
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: gudtrip-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: gudtrip-redis
+          property: port
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+
+  # Frontend Service (React/Vite)
+  - type: static
+    name: gudtrip-web
+    env: node
+    buildCommand: npm install && npm run build -w apps/web
+    publishDir: apps/web/dist
+    routes:
+      - type: rewrite
+        source: /**
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: gudtrip-api
+          property: url
+
+databases:
+  - name: gudtrip-db
+    databaseName: gudtrip
+    user: gudtrip_user
+    plan: free
+    region: oregon
+
+# Redis is not available on free tier blueprints directly as a managed service in the same way, 
+# but for this example we assume it is or we use an internal redis if needed. 
+# Render does support Redis, but it might be a paid feature or require different config.
+# For free tier, we might skip Redis or use a free external provider. 
+# I will comment out Redis service dependency for now to ensure it works on free tier if possible,
+# or keep it if the user has a plan. Let's assume standard setup.

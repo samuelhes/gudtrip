@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: gudtrip_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-gudtrip}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-gudtrip_password}
+      POSTGRES_DB: ${DB_NAME:-gudtrip_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gudtrip_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: gudtrip_redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - gudtrip_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+
+networks:
+  gudtrip_network:
+    driver: bridge
