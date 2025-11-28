@@ -9,6 +9,7 @@ import { WalletModule } from './wallet/wallet.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
     imports: [
@@ -33,7 +34,9 @@ import { NotificationsModule } from './notifications/notifications.module';
         WalletModule,
         BookingsModule,
         ReviewsModule,
+        ReviewsModule,
         NotificationsModule,
+        AdminModule,
     ],
     controllers: [],
     providers: [],

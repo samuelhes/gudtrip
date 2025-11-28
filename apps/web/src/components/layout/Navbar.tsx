@@ -71,7 +71,7 @@ export const Navbar = () => {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-                <div className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
+                <div className="md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg z-40">
                     <div className="px-4 pt-2 pb-4 space-y-1">
                         {user ? (
                             <>
@@ -80,28 +80,28 @@ export const Navbar = () => {
                                 </div>
                                 <Link
                                     to="/publish"
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 active:bg-gray-50 active:text-blue-600"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Publicar Viaje
                                 </Link>
                                 <Link
                                     to="/wallet"
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 active:bg-gray-50 active:text-blue-600"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Billetera
                                 </Link>
                                 <Link
                                     to="/trips"
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 active:bg-gray-50 active:text-blue-600"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Mis Viajes
                                 </Link>
                                 <Link
                                     to="/profile"
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 active:bg-gray-50 active:text-blue-600"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Mi Perfil
@@ -111,7 +111,7 @@ export const Navbar = () => {
                                         logout();
                                         setIsMenuOpen(false);
                                     }}
-                                    className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
+                                    className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 active:bg-red-50"
                                 >
                                     Cerrar Sesión
                                 </button>
@@ -120,14 +120,14 @@ export const Navbar = () => {
                             <>
                                 <Link
                                     to="/login"
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 active:bg-gray-50 active:text-blue-600"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Iniciar Sesión
                                 </Link>
                                 <Link
                                     to="/register"
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 font-bold hover:bg-blue-50"
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 font-bold active:bg-blue-50"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Registrarse

@@ -19,6 +19,9 @@ interface Ride {
 export const SearchResultsPage = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const [rides, setRides] = useState<Ride[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [bookingLoading, setBookingLoading] = useState<string | null>(null);
     const [selectedRide, setSelectedRide] = useState<Ride | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showFundsModal, setShowFundsModal] = useState(false);
@@ -70,7 +73,7 @@ export const SearchResultsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-[100dvh] bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Viajes disponibles</h2>
 
@@ -88,8 +91,8 @@ export const SearchResultsPage = () => {
                     <div className="space-y-4">
                         {rides.map((ride) => (
                             <div key={ride.id} className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow">
-                                <div className="flex justify-between items-start">
-                                    <div className="space-y-4 flex-1">
+                                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-0">
+                                    <div className="space-y-4 flex-1 w-full">
                                         <div className="flex items-center gap-4">
                                             <div className="flex flex-col items-center">
                                                 <div className="text-sm font-bold text-gray-900">
@@ -124,7 +127,7 @@ export const SearchResultsPage = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col items-end justify-between h-full pl-6 border-l ml-6">
+                                    <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto sm:h-full sm:pl-6 sm:border-l sm:ml-6 pt-4 sm:pt-0 border-t sm:border-t-0">
                                         <div className="text-2xl font-bold text-blue-600 flex items-center">
                                             <DollarSign className="h-6 w-6" />
                                             {ride.price_tokens}
@@ -132,7 +135,7 @@ export const SearchResultsPage = () => {
                                         <button
                                             onClick={() => handleBookClick(ride)}
                                             disabled={bookingLoading === ride.id || ride.available_seats === 0}
-                                            className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="sm:mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {bookingLoading === ride.id ? 'Reservando...' : 'Reservar'}
                                         </button>
@@ -146,7 +149,7 @@ export const SearchResultsPage = () => {
 
             {/* Confirm Booking Modal */}
             {showConfirmModal && selectedRide && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
                     <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-6">
                         <h3 className="text-xl font-bold text-gray-900">Confirmar Reserva</h3>
                         <p className="text-gray-600">

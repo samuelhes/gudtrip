@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class NotificationsService {
     private transporter: nodemailer.Transporter;
+
+    private readonly logger = new Logger(NotificationsService.name);
 
     constructor(private configService: ConfigService) {
         // For development, we can use Ethereal or just log to console if no creds are provided
@@ -43,11 +45,11 @@ export class NotificationsService {
                 subject,
                 html,
             });
-            console.log('Message sent: %s', info.messageId);
+            this.logger.log(`Message sent: ${info.messageId}`);
             // Preview only available when sending through an Ethereal account
-            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+            this.logger.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
         } catch (error) {
-            console.error('Error sending email:', error);
+            this.logger.error('Error sending email:', error);
             // Don't throw error to avoid failing the booking transaction if email fails
         }
     }

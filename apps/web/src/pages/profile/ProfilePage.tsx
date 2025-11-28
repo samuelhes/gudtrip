@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { User, Shield, CheckCircle, AlertCircle, Car } from 'lucide-react';
+import { Shield, CheckCircle, AlertCircle, Car } from 'lucide-react';
 
 export const ProfilePage = () => {
     const { user } = useAuth();
@@ -32,10 +32,10 @@ export const ProfilePage = () => {
                         <p className="text-gray-500">{user.email}</p>
                         <div className="flex gap-2 mt-3">
                             {user.roles.map((role) => (
-                                <span key={role} className={`px-3 py-1 rounded-full text-xs font-bold ${role === 'ADMIN' ? 'bg-purple-100 text-purple-700' :
-                                        role === 'DRIVER' ? 'bg-blue-100 text-blue-700' :
-                                            'bg-gray-100 text-gray-700'
-                                    }`}>
+                                <span key={role} className={`px - 3 py - 1 rounded - full text - xs font - bold ${role === 'ADMIN' ? 'bg-purple-100 text-purple-700' :
+                                    role === 'DRIVER' ? 'bg-blue-100 text-blue-700' :
+                                        'bg-gray-100 text-gray-700'
+                                    } `}>
                                     {role === 'DRIVER' ? 'CONDUCTOR' : role === 'PASSENGER' ? 'PASAJERO' : role}
                                 </span>
                             ))}
@@ -66,7 +66,7 @@ export const ProfilePage = () => {
                                 )}
                                 <span className="font-medium text-gray-700">Licencia de Conducir</span>
                             </div>
-                            <span className={`text-sm font-bold ${isDriver ? 'text-green-600' : 'text-yellow-600'}`}>
+                            <span className={`text - sm font - bold ${isDriver ? 'text-green-600' : 'text-yellow-600'} `}>
                                 {isDriver ? 'Verificado' : 'Pendiente'}
                             </span>
                         </div>

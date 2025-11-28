@@ -13,12 +13,14 @@ interface AuthContextType {
     login: (token: string, user: User) => void;
     logout: () => void;
     isAuthenticated: boolean;
+    loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Check for existing token on mount
@@ -27,6 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (token && savedUser) {
             setUser(JSON.parse(savedUser));
         }
+        setLoading(false);
     }, []);
 
     const login = (token: string, userData: User) => {
@@ -42,7 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, loading }}>
             {children}
         </AuthContext.Provider>
     );

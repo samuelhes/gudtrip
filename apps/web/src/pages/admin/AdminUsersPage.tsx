@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
-import { User, Shield, Ban, CheckCircle } from 'lucide-react';
+import { Ban, CheckCircle } from 'lucide-react';
 
 interface UserData {
     id: string;

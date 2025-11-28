@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Navbar } from './components/layout/Navbar';
 import { AuthProvider } from './context/AuthContext';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -9,7 +8,12 @@ import { SearchResultsPage } from './pages/rides/SearchResultsPage';
 import { WalletPage } from './pages/wallet/WalletPage';
 import { MyTripsPage } from './pages/trips/MyTripsPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
-
+import { Layout } from './components/layout/Layout';
+import { AdminLayout } from './components/layout/AdminLayout';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { AdminRoute } from './components/auth/AdminRoute';
+import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
+import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 function App() {
     return (
         <AuthProvider>
