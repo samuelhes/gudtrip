@@ -14,16 +14,31 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <div className="min-h-screen bg-gray-50 font-sans">
-                    <Navbar />
+                    {/* Navbar is now likely handled within the Layout component */}
                     <Routes>
-                        <Route path="/" element={<HomePage />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
-                        <Route path="/publish" element={<PublishRidePage />} />
-                        <Route path="/search" element={<SearchResultsPage />} />
-                        <Route path="/wallet" element={<WalletPage />} />
-                        <Route path="/trips" element={<MyTripsPage />} />
-                        {/* Add more routes here */}
+
+                        {/* Public Routes with Navbar */}
+                        <Route element={<Layout />}>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/publish" element={<PublishRidePage />} />
+                            <Route path="/search" element={<SearchResultsPage />} />
+
+                            {/* Protected User Routes */}
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="/wallet" element={<WalletPage />} />
+                                <Route path="/trips" element={<MyTripsPage />} />
+                            </Route>
+                        </Route>
+
+                        {/* Protected Admin Routes */}
+                        <Route element={<AdminRoute />}>
+                            <Route path="/admin" element={<AdminLayout />}>
+                                <Route index element={<AdminDashboardPage />} />
+                                <Route path="users" element={<AdminUsersPage />} />
+                            </Route>
+                        </Route>
                     </Routes>
                 </div>
             </BrowserRouter>
