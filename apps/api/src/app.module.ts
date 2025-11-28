@@ -1,3 +1,4 @@
+// Force redeploy: Add meeting_point and final_point columns
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
