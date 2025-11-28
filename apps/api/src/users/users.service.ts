@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -22,7 +22,14 @@ export class UsersService {
             password_hash,
         });
 
-        return this.usersRepository.save(user);
+        try {
+            return await this.usersRepository.save(user);
+        } catch (error: any) {
+            if (error.code === '23505') { // Postgres unique violation
+                throw new ConflictException('El correo electrónico ya está registrado');
+            }
+            throw error;
+        }
     }
 
     async findOneByEmail(email: string): Promise<User | null> {
