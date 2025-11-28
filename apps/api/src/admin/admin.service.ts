@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { Ride } from '../rides/entities/ride.entity';
 import { Booking } from '../bookings/entities/booking.entity';
@@ -25,11 +25,34 @@ export class AdminService {
         const bookings = await this.bookingsRepository.find();
         const totalRevenue = bookings.reduce((sum, booking) => sum + Number(booking.total_price), 0);
 
+        // New stats: recent rides (last 7 days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        const recentRides = await this.ridesRepository.count({
+            where: {
+                created_at: MoreThan(sevenDaysAgo)
+            }
+        });
+
+        // Active users this month
+        const firstDayOfMonth = new Date();
+        firstDayOfMonth.setDate(1);
+        firstDayOfMonth.setHours(0, 0, 0, 0);
+
+        const activeUsers = await this.usersRepository.count({
+            where: {
+                created_at: MoreThan(firstDayOfMonth)
+            }
+        });
+
         return {
             totalUsers,
             totalRides,
             totalBookings,
             totalRevenue,
+            recentRides,
+            activeUsers,
         };
     }
 
@@ -44,5 +67,33 @@ export class AdminService {
             relations: ['driver'],
             order: { created_at: 'DESC' },
         });
+    }
+
+    async updateRideStatus(id: string, status: string) {
+        const ride = await this.ridesRepository.findOne({ where: { id } });
+        if (!ride) {
+            throw new NotFoundException('Ride not found');
+        }
+
+        ride.status = status;
+        return this.ridesRepository.save(ride);
+    }
+
+    async deleteRide(id: string) {
+        const result = await this.ridesRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException('Ride not found');
+        }
+        return { message: 'Ride deleted successfully' };
+    }
+
+    async updateUserStatus(id: string, status: string) {
+        const user = await this.usersRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        user.status = status as any; // Status ya viene validado del DTO
+        return this.usersRepository.save(user);
     }
 }

@@ -4,7 +4,7 @@ export const Footer = () => {
         <footer className="bg-white border-t border-gray-200 py-6 mt-auto">
             <div className="container mx-auto px-4 text-center">
                 <p className="text-gray-500 text-sm">
-                    Gudtrip v1.0.1
+                    Gudtrip v1.0.3
                 </p>
             </div>
         </footer>

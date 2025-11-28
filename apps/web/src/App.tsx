@@ -14,6 +14,7 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AdminRoute } from './components/auth/AdminRoute';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
+import { AdminRidesPage } from './pages/admin/AdminRidesPage';
 function App() {
     return (
         <AuthProvider>
@@ -43,6 +44,7 @@ function App() {
                             <Route path="/admin" element={<AdminLayout />}>
                                 <Route index element={<AdminDashboardPage />} />
                                 <Route path="users" element={<AdminUsersPage />} />
+                                <Route path="rides" element={<AdminRidesPage />} />
                             </Route>
                         </Route>
                     </Routes>

@@ -7,6 +7,8 @@ interface DashboardStats {
     totalRides: number;
     totalBookings: number;
     totalRevenue: number;
+    activeUsers: number;
+    recentRides: number;
 }
 
 export const AdminDashboardPage = () => {
@@ -75,6 +77,28 @@ export const AdminDashboardPage = () => {
                         <span className="text-sm font-medium text-gray-500">Tokens Movidos</span>
                     </div>
                     <h3 className="text-3xl font-bold text-gray-900">{stats?.totalRevenue}</h3>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="bg-green-100 p-3 rounded-xl">
+                            <Users className="w-6 h-6 text-green-600" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-500">Usuarios Activos (Este Mes)</span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-gray-900">{stats?.activeUsers}</h3>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="bg-purple-100 p-3 rounded-xl">
+                            <Car className="w-6 h-6 text-purple-600" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-500">Viajes Recientes (Últimos 7 días)</span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-gray-900">{stats?.recentRides}</h3>
                 </div>
             </div>
         </div>
