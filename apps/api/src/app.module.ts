@@ -22,7 +22,7 @@ import { NotificationsModule } from './notifications/notifications.module';
                 username: configService.get<string>('DB_USER', 'gudtrip'),
                 password: configService.get<string>('DB_PASSWORD', 'gudtrip_password'),
                 database: configService.get<string>('DB_NAME', 'gudtrip_db'),
-                entities: [User],
+                autoLoadEntities: true,
                 synchronize: true, // Auto-create tables (dev only)
             }),
             inject: [ConfigService],
