@@ -41,6 +41,12 @@ export class User {
     @Column({ nullable: true })
     last_name: string;
 
+    @Column({ nullable: true })
+    phone_number: string;
+
+    @Column({ nullable: true })
+    avatar_url: string;
+
     @Column({ type: 'float', default: 0 })
     average_rating: number;
 

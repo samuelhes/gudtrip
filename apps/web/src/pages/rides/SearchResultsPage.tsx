@@ -60,7 +60,7 @@ export const SearchResultsPage = () => {
                 seats: 1,
             });
             setShowConfirmModal(false);
-            alert('¡Reserva exitosa! Buen viaje 🚗');
+            alert('¡Solicitud enviada! Espera la confirmación del conductor 🚗');
             navigate('/trips');
         } catch (error: any) {
             console.error('Error booking ride:', error);

@@ -90,7 +90,7 @@ describe('BookingsService', () => {
 
             // Verify booking created with PENDING status
             expect(mockQueryRunner.manager.create).toHaveBeenCalledWith(Booking, expect.objectContaining({
-                status: BookingStatus.PENDING_ACEPTACION_DRIVER
+                status: BookingStatus.PENDING_APPROVAL
             }));
         });
 

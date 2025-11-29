@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param, Patch, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UseGuards, Request, ForbiddenException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserRole } from './entities/user.entity';
 
 @Controller('users')
@@ -30,7 +30,7 @@ export class UsersController {
     update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Request() req) {
         // Ensure user can only update their own profile
         if (req.user.userId !== id) {
-            // In a real app, throw ForbiddenException
+            throw new ForbiddenException('You can only update your own profile');
         }
         return this.usersService.update(id, updateUserDto);
     }

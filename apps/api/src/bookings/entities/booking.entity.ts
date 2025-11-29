@@ -3,12 +3,12 @@ import { User } from '../../users/entities/user.entity';
 import { Ride } from '../../rides/entities/ride.entity';
 
 export enum BookingStatus {
-    PENDING_ACEPTACION_DRIVER = 'PENDING_ACEPTACION_DRIVER',
-    CONFIRMED = 'CONFIRMED',
+    PENDING_APPROVAL = 'PENDING_APPROVAL',
+    APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
-    EXPIRADA = 'EXPIRADA',
-    CANCELLED_PASAJERO = 'CANCELLED_PASAJERO',
-    CANCELLED_DRIVER = 'CANCELLED_DRIVER',
+    EXPIRED = 'EXPIRED',
+    CANCELLED_BY_PASSENGER = 'CANCELLED_BY_PASSENGER',
+    CANCELLED_BY_DRIVER = 'CANCELLED_BY_DRIVER',
     COMPLETED = 'COMPLETED',
 }
 
@@ -37,7 +37,7 @@ export class Booking {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     total_price: number;
 
-    @Column({ type: 'enum', enum: BookingStatus, default: BookingStatus.PENDING_ACEPTACION_DRIVER })
+    @Column({ type: 'enum', enum: BookingStatus, default: BookingStatus.PENDING_APPROVAL })
     status: BookingStatus;
 
     @CreateDateColumn()

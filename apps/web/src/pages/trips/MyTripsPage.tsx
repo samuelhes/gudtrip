@@ -79,9 +79,8 @@ export const MyTripsPage = () => {
                                                     <Clock className="w-4 h-4 ml-2" />
                                                     {new Date(booking.ride.departure_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </div>
-                                                <span className={`inline - flex items - center px - 2.5 py - 0.5 rounded - full text - xs font - medium ${booking.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                                    } `}>
-                                                    {booking.status === 'CONFIRMED' ? 'Confirmado' : booking.status}
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${booking.status === 'APPROVED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                                                    {booking.status === 'APPROVED' ? 'Confirmado' : booking.status}
                                                 </span>
                                             </div>
                                         </div>
@@ -121,7 +120,7 @@ export const MyTripsPage = () => {
                                             </span>
                                         </div>
 
-                                        {booking.status === 'CONFIRMED' && (
+                                        {booking.status === 'APPROVED' && (
                                             <button
                                                 onClick={() => handleOpenReview(booking.ride.id, booking.ride.driver.id, booking.ride.driver.first_name)}
                                                 className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"

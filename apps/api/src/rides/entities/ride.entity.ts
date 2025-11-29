@@ -4,6 +4,7 @@ import { User } from '../../users/entities/user.entity';
 export enum RideStatus {
     OPEN = 'OPEN',
     FULL = 'FULL',
+    IN_PROGRESS = 'IN_PROGRESS',
     COMPLETED = 'COMPLETED',
     CANCELLED = 'CANCELLED',
 }

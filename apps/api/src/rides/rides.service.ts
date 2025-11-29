@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateRideDto } from './dto/create-ride.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -17,6 +17,10 @@ export class RidesService {
     ) { }
 
     async create(createRideDto: CreateRideDto, driver: User): Promise<Ride> {
+        if (new Date(createRideDto.departure_time) < new Date()) {
+            throw new BadRequestException('La fecha de salida no puede ser en el pasado');
+        }
+
         const ride = this.ridesRepository.create({
             ...createRideDto,
             driver,

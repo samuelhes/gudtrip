@@ -73,7 +73,7 @@ export class BookingsService {
                 passenger_id: passenger.id,
                 seats_booked: createBookingDto.seats,
                 total_price: totalPrice,
-                status: BookingStatus.PENDING_ACEPTACION_DRIVER,
+                status: BookingStatus.PENDING_APPROVAL,
             });
             await queryRunner.manager.save(booking);
 
@@ -96,9 +96,9 @@ export class BookingsService {
         const booking = await this.bookingsRepository.findOne({ where: { id: bookingId }, relations: ['ride'] });
         if (!booking) throw new NotFoundException('Booking not found');
         if (booking.ride.driver_id !== driverId) throw new BadRequestException('Only driver can accept booking');
-        if (booking.status !== BookingStatus.PENDING_ACEPTACION_DRIVER) throw new BadRequestException('Booking is not pending');
+        if (booking.status !== BookingStatus.PENDING_APPROVAL) throw new BadRequestException('Booking is not pending');
 
-        booking.status = BookingStatus.CONFIRMED;
+        booking.status = BookingStatus.APPROVED;
         return this.bookingsRepository.save(booking);
     }
 
@@ -111,7 +111,7 @@ export class BookingsService {
             const booking = await queryRunner.manager.findOne(Booking, { where: { id: bookingId }, relations: ['ride'] });
             if (!booking) throw new NotFoundException('Booking not found');
             if (booking.ride.driver_id !== driverId) throw new BadRequestException('Only driver can reject booking');
-            if (booking.status !== BookingStatus.PENDING_ACEPTACION_DRIVER) throw new BadRequestException('Booking is not pending');
+            if (booking.status !== BookingStatus.PENDING_APPROVAL) throw new BadRequestException('Booking is not pending');
 
             // Refund tokens
             await this.walletService.releaseFunds(booking.passenger_id, booking.total_price, queryRunner);
