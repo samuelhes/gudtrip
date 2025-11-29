@@ -22,6 +22,7 @@ export class RidesService {
             driver,
             driver_id: driver.id,
             total_seats: createRideDto.available_seats,
+            available_seats: createRideDto.available_seats, // Initialize available_seats
             status: RideStatus.OPEN,
         });
         const savedRide = await this.ridesRepository.save(ride);

@@ -54,13 +54,12 @@ export class BookingsService {
             });
             await queryRunner.manager.save(transaction);
 
-            // 4. Update Ride Seats (Reserved but not confirmed? Requirement says "Driver acepta -> se descuenta cupo". So maybe don't deduct yet? Or deduct "pending" seats? 
-            // Let's assume we deduct seats to prevent overbooking, but if rejected we add them back.
-            // Requirement: "Driver acepta -> CONFIRMADA, se descuenta cupo."
-            // This implies cupo is NOT discounted until accepted. But then multiple people can request same seat.
-            // Better approach: Deduct seats immediately (or have "pending_seats"). 
-            // To keep it simple and safe: Deduct seats immediately. If rejected, add back.
+            // 4. Update Ride Seats
+            // Deduct seats immediately to prevent overbooking. If rejected, add back.
             ride.available_seats -= createBookingDto.seats;
+            if (ride.available_seats < 0) {
+                throw new BadRequestException('Not enough seats available');
+            }
             if (ride.available_seats === 0) {
                 ride.status = RideStatus.FULL;
             }

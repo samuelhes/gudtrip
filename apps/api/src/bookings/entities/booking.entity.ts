@@ -37,7 +37,7 @@ export class Booking {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     total_price: number;
 
-    @Column({ type: 'enum', enum: BookingStatus, default: BookingStatus.CONFIRMED })
+    @Column({ type: 'enum', enum: BookingStatus, default: BookingStatus.PENDING_ACEPTACION_DRIVER })
     status: BookingStatus;
 
     @CreateDateColumn()
