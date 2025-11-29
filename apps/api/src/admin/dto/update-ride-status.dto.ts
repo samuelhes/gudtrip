@@ -1,11 +1,5 @@
-import { IsString, IsEnum } from 'class-validator';
-
-export enum RideStatus {
-    OPEN = 'OPEN',
-    FULL = 'FULL',
-    COMPLETED = 'COMPLETED',
-    CANCELLED = 'CANCELLED'
-}
+import { IsEnum } from 'class-validator';
+import { RideStatus } from '../../rides/entities/ride.entity';
 
 export class UpdateRideStatusDto {
     @IsEnum(RideStatus)

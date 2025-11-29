@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
-import { User } from '../users/entities/user.entity';
+import { User, UserStatus } from '../users/entities/user.entity';
 import { Ride, RideStatus } from '../rides/entities/ride.entity';
 import { Booking } from '../bookings/entities/booking.entity';
 
@@ -87,13 +87,13 @@ export class AdminService {
         return { message: 'Ride deleted successfully' };
     }
 
-    async updateUserStatus(id: string, status: string) {
+    async updateUserStatus(id: string, status: UserStatus) {
         const user = await this.usersRepository.findOne({ where: { id } });
         if (!user) {
             throw new NotFoundException('User not found');
         }
 
-        user.status = status as any; // Status ya viene validado del DTO
+        user.status = status;
         return this.usersRepository.save(user);
     }
 }
