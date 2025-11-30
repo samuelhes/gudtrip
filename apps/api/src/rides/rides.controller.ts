@@ -17,4 +17,9 @@ export class RidesController {
     findAll() {
         return this.ridesService.findAll();
     }
+
+    @Get('my-rides')
+    findMyRides(@Request() req: any) {
+        return this.ridesService.findAllByDriver(req.user.id);
+    }
 }

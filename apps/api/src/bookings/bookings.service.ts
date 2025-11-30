@@ -93,13 +93,45 @@ export class BookingsService {
     }
 
     async acceptBooking(bookingId: string, driverId: string): Promise<Booking> {
-        const booking = await this.bookingsRepository.findOne({ where: { id: bookingId }, relations: ['ride'] });
-        if (!booking) throw new NotFoundException('Booking not found');
-        if (booking.ride.driver_id !== driverId) throw new BadRequestException('Only driver can accept booking');
-        if (booking.status !== BookingStatus.PENDING_APPROVAL) throw new BadRequestException('Booking is not pending');
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
 
-        booking.status = BookingStatus.APPROVED;
-        return this.bookingsRepository.save(booking);
+        try {
+            const booking = await queryRunner.manager.findOne(Booking, { where: { id: bookingId }, relations: ['ride', 'passenger'] });
+            if (!booking) throw new NotFoundException('Booking not found');
+            if (booking.ride.driver_id !== driverId) throw new BadRequestException('Only driver can accept booking');
+            if (booking.status !== BookingStatus.PENDING_APPROVAL) throw new BadRequestException('Booking is not pending');
+
+            // Transfer funds from passenger blocked balance to driver wallet
+            await this.walletService.captureFunds(booking.passenger_id, driverId, Number(booking.total_price), queryRunner);
+
+            // Create Transaction Record for Driver (Income)
+            const driverWallet = await queryRunner.manager.findOne(Wallet, { where: { user_id: driverId } });
+            const transaction = queryRunner.manager.create(Transaction, {
+                wallet: driverWallet,
+                wallet_id: driverWallet.id,
+                type: TransactionType.PAYMENT,
+                amount: booking.total_price,
+                description: `Payment for ride from ${booking.passenger.first_name}`,
+            });
+            await queryRunner.manager.save(transaction);
+
+            booking.status = BookingStatus.APPROVED;
+            await queryRunner.manager.save(booking);
+
+            await queryRunner.commitTransaction();
+
+            // Send Notification
+            this.notificationsService.sendBookingConfirmation(booking.passenger.email, booking.passenger.first_name, booking.ride);
+
+            return booking;
+        } catch (err) {
+            await queryRunner.rollbackTransaction();
+            throw err;
+        } finally {
+            await queryRunner.release();
+        }
     }
 
     async rejectBooking(bookingId: string, driverId: string): Promise<Booking> {
@@ -139,6 +171,14 @@ export class BookingsService {
         return this.bookingsRepository.find({
             where: { passenger_id: userId },
             relations: ['ride', 'ride.driver'],
+            order: { created_at: 'DESC' },
+        });
+    }
+
+    async findAllForDriver(driverId: string): Promise<Booking[]> {
+        return this.bookingsRepository.find({
+            where: { ride: { driver_id: driverId } },
+            relations: ['ride', 'passenger'],
             order: { created_at: 'DESC' },
         });
     }

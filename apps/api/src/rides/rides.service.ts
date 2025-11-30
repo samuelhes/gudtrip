@@ -24,7 +24,6 @@ export class RidesService {
         const ride = this.ridesRepository.create({
             ...createRideDto,
             driver,
-            driver_id: driver.id,
             total_seats: createRideDto.available_seats,
             available_seats: createRideDto.available_seats, // Initialize available_seats
             status: RideStatus.OPEN,
@@ -55,6 +54,14 @@ export class RidesService {
         return this.ridesRepository.find({
             where: { status: RideStatus.OPEN },
             order: { departure_time: 'ASC' },
+            relations: ['driver'], // Eager load driver
+        });
+    }
+
+    findAllByDriver(driverId: string) {
+        return this.ridesRepository.find({
+            where: { driver_id: driverId },
+            order: { departure_time: 'DESC' },
         });
     }
 
