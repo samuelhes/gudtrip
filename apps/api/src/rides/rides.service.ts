@@ -7,11 +7,15 @@ import { User } from '../users/entities/user.entity';
 import { TravelNeedsService } from '../travel-needs/travel-needs.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
+import { Booking, BookingStatus } from '../bookings/entities/booking.entity';
+
 @Injectable()
 export class RidesService {
     constructor(
         @InjectRepository(Ride)
         private ridesRepository: Repository<Ride>,
+        @InjectRepository(Booking)
+        private bookingsRepository: Repository<Booking>,
         private travelNeedsService: TravelNeedsService,
         private notificationsService: NotificationsService,
     ) { }
@@ -67,5 +71,32 @@ export class RidesService {
 
     findOne(id: string) {
         return this.ridesRepository.findOne({ where: { id } });
+    }
+    async startRide(id: string, driverId: string): Promise<Ride> {
+        const ride = await this.ridesRepository.findOne({ where: { id } });
+        if (!ride) throw new BadRequestException('Ride not found');
+        if (ride.driver_id !== driverId) throw new BadRequestException('Only driver can start ride');
+        if (ride.status !== RideStatus.OPEN && ride.status !== RideStatus.FULL) throw new BadRequestException('Ride cannot be started');
+
+        ride.status = RideStatus.IN_PROGRESS;
+        return this.ridesRepository.save(ride);
+    }
+
+    async completeRide(id: string, driverId: string): Promise<Ride> {
+        const ride = await this.ridesRepository.findOne({ where: { id } });
+        if (!ride) throw new BadRequestException('Ride not found');
+        if (ride.driver_id !== driverId) throw new BadRequestException('Only driver can complete ride');
+        if (ride.status !== RideStatus.IN_PROGRESS) throw new BadRequestException('Ride is not in progress');
+
+        ride.status = RideStatus.COMPLETED;
+        const savedRide = await this.ridesRepository.save(ride);
+
+        // Update all approved bookings to COMPLETED
+        await this.bookingsRepository.update(
+            { ride_id: id, status: BookingStatus.APPROVED },
+            { status: BookingStatus.COMPLETED }
+        );
+
+        return savedRide;
     }
 }
