@@ -79,8 +79,19 @@ export const MyTripsPage = () => {
                                                     <Clock className="w-4 h-4 ml-2" />
                                                     {new Date(booking.ride.departure_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </div>
-                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${booking.status === 'APPROVED' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                                                    {booking.status === 'APPROVED' ? 'Confirmado' : booking.status}
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${booking.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
+                                                        booking.status === 'PENDING_APPROVAL' ? 'bg-yellow-100 text-yellow-800' :
+                                                            booking.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                                                                booking.status === 'COMPLETED' ? 'bg-blue-100 text-blue-800' :
+                                                                    'bg-gray-100 text-gray-800'
+                                                    }`}>
+                                                    {
+                                                        booking.status === 'APPROVED' ? 'Confirmado' :
+                                                            booking.status === 'PENDING_APPROVAL' ? 'Pendiente' :
+                                                                booking.status === 'REJECTED' ? 'Rechazado' :
+                                                                    booking.status === 'COMPLETED' ? 'Completado' :
+                                                                        booking.status
+                                                    }
                                                 </span>
                                             </div>
                                         </div>

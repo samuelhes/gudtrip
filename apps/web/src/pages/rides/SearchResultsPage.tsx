@@ -153,7 +153,7 @@ export const SearchResultsPage = () => {
                                             disabled={bookingLoading === ride.id || ride.available_seats === 0}
                                             className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-touch w-full xs:w-auto"
                                         >
-                                            {bookingLoading === ride.id ? 'Reservando...' : 'Reservar'}
+                                            {bookingLoading === ride.id ? 'Solicitando...' : 'Solicitar Cupo'}
                                         </button>
                                     </div>
                                 </div>
@@ -167,17 +167,22 @@ export const SearchResultsPage = () => {
             <ResponsiveModal
                 isOpen={showConfirmModal && !!selectedRide}
                 onClose={() => setShowConfirmModal(false)}
-                title="Confirmar Reserva"
+                title="Solicitar Cupo"
                 size="md"
             >
                 {selectedRide && (
                     <div className="space-y-6">
                         <p className="text-gray-600">
-                            Estás a punto de reservar un asiento para el viaje de <b>{selectedRide.origin}</b> a <b>{selectedRide.destination}</b>.
+                            Estás a punto de solicitar un asiento para el viaje de <b>{selectedRide.origin}</b> a <b>{selectedRide.destination}</b>.
                         </p>
-                        <div className="bg-blue-50 p-4 rounded-xl flex justify-between items-center">
-                            <span className="text-blue-800 font-medium">Total a pagar</span>
-                            <span className="text-2xl font-bold text-blue-600">{selectedRide.price_tokens} Tokens</span>
+                        <div className="bg-blue-50 p-4 rounded-xl">
+                            <div className="flex justify-between items-center mb-2">
+                                <span className="text-blue-800 font-medium">Precio por asiento</span>
+                                <span className="text-xl font-bold text-blue-600">{selectedRide.price_tokens} Tokens</span>
+                            </div>
+                            <p className="text-xs text-blue-600">
+                                * Los tokens se descontarán de tu billetera solo cuando el conductor acepte tu solicitud.
+                            </p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-3">
                             <button
@@ -191,7 +196,7 @@ export const SearchResultsPage = () => {
                                 disabled={!!bookingLoading}
                                 className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50 touch-manipulation min-h-touch"
                             >
-                                {bookingLoading ? 'Procesando...' : 'Confirmar Pago'}
+                                {bookingLoading ? 'Enviando...' : 'Enviar Solicitud'}
                             </button>
                         </div>
                     </div>

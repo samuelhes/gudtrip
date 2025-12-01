@@ -79,6 +79,42 @@ export const NotificationsPage: React.FC = () => {
                                             {notification.title}
                                         </h3>
                                         <p className="text-gray-600 mb-3">{notification.body}</p>
+
+                                        {notification.type === 'TRIP_REQUEST' && !notification.is_read && (
+                                            <div className="flex gap-3 mb-3">
+                                                <button
+                                                    onClick={async () => {
+                                                        try {
+                                                            await api.patch(`/bookings/${(notification as any).data.bookingId}/accept`);
+                                                            alert('Solicitud aceptada');
+                                                            markAsRead(notification.id);
+                                                            fetchNotifications(); // Refresh to update UI
+                                                        } catch (e: any) {
+                                                            alert(e.response?.data?.message || 'Error al aceptar');
+                                                        }
+                                                    }}
+                                                    className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
+                                                >
+                                                    Aceptar
+                                                </button>
+                                                <button
+                                                    onClick={async () => {
+                                                        try {
+                                                            await api.patch(`/bookings/${(notification as any).data.bookingId}/reject`);
+                                                            alert('Solicitud rechazada');
+                                                            markAsRead(notification.id);
+                                                            fetchNotifications();
+                                                        } catch (e: any) {
+                                                            alert(e.response?.data?.message || 'Error al rechazar');
+                                                        }
+                                                    }}
+                                                    className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200"
+                                                >
+                                                    Rechazar
+                                                </button>
+                                            </div>
+                                        )}
+
                                         <div className="flex items-center gap-4 text-sm text-gray-500">
                                             <span className="flex items-center gap-1">
                                                 <Clock className="w-4 h-4" />

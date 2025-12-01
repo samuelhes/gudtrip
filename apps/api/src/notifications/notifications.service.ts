@@ -70,6 +70,39 @@ export class NotificationsService {
         //     await this.transporter.sendMail({ ... });
         // }
     }
+
+    async sendTripRequestNotification(driverId: string, passengerName: string, ride: any, bookingId: string) {
+        this.logger.log(`Sending trip request notification to driver ${driverId} from ${passengerName} for ride ${ride.id}`);
+        // In a real implementation, we would fetch the driver's email and send it.
+        // For now, we log it. We should also persist an in-app notification if we had that system fully set up.
+        // Let's assume we persist it via the repository if we want in-app notifications.
+        const notification = this.notificationsRepository.create({
+            user_id: driverId,
+            message: `Solicitud de viaje: ${passengerName} quiere unirse a tu viaje a ${ride.destination}`,
+            type: 'TRIP_REQUEST',
+            data: { rideId: ride.id, passengerName, bookingId },
+        });
+        await this.notificationsRepository.save(notification);
+    }
+
+    async sendBookingRejection(to: string, passengerName: string, rideDetails: any) {
+        const subject = 'Solicitud de Viaje Rechazada';
+        const html = `
+      <h1>Hola, ${passengerName}.</h1>
+      <p>Lo sentimos, el conductor no ha podido aceptar tu solicitud para el viaje a ${rideDetails.destination}.</p>
+      <p>No se te ha cobrado nada. Puedes buscar otro viaje.</p>
+    `;
+        try {
+            await this.transporter.sendMail({
+                from: '"Gudtrip" <no-reply@gudtrip.com>',
+                to,
+                subject,
+                html,
+            });
+        } catch (error) {
+            this.logger.error('Error sending rejection email:', error);
+        }
+    }
     async findAllForUser(userId: string) {
         return this.notificationsRepository.find({
             where: { user_id: userId },

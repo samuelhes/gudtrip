@@ -17,4 +17,14 @@ export class AuthController {
     signUp(@Body() createUserDto: CreateUserDto) {
         return this.authService.register(createUserDto);
     }
+
+    @Post('forgot-password')
+    forgotPassword(@Body('email') email: string) {
+        return this.authService.forgotPassword(email);
+    }
+
+    @Post('reset-password')
+    resetPassword(@Body() body: any) {
+        return this.authService.resetPassword(body.token, body.password);
+    }
 }

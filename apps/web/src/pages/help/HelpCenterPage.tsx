@@ -50,8 +50,8 @@ const HelpCenterPage: React.FC = () => {
                             </li>
                         </ul>
                         <div className="mt-8">
-                            <Link to="/" className="text-primary-600 font-semibold hover:text-primary-700">
-                                Buscar un viaje ahora &rarr;
+                            <Link to="/help/request-ride" className="text-primary-600 font-semibold hover:text-primary-700">
+                                Ver guía completa: Cómo solicitar un viaje &rarr;
                             </Link>
                         </div>
                     </div>
@@ -85,8 +85,8 @@ const HelpCenterPage: React.FC = () => {
                             </li>
                         </ul>
                         <div className="mt-8">
-                            <Link to="/publish" className="text-green-600 font-semibold hover:text-green-700">
-                                Publicar mi primer viaje &rarr;
+                            <Link to="/help/publish-ride" className="text-green-600 font-semibold hover:text-green-700">
+                                Ver guía completa: Cómo publicar un viaje &rarr;
                             </Link>
                         </div>
                     </div>
