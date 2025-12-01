@@ -29,6 +29,7 @@ import { DocumentsModule } from './documents/documents.module';
                 database: configService.get<string>('DB_NAME', 'gudtrip_db'),
                 autoLoadEntities: true,
                 synchronize: true, // Auto-create tables (dev only)
+                ssl: configService.get<string>('DB_SSL', 'true') === 'true' ? { rejectUnauthorized: false } : false,
             }),
             inject: [ConfigService],
         }),
