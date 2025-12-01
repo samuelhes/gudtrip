@@ -11,6 +11,7 @@ import { ProfilePage } from './pages/profile/ProfilePage';
 import { PublishTravelNeedPage } from './pages/travel-needs/PublishTravelNeedPage';
 import { NotificationsPage } from './pages/notifications/NotificationsPage';
 import { DriverDocumentsPage } from './pages/driver/DriverDocumentsPage';
+import HelpCenterPage from './pages/help/HelpCenterPage';
 import { Layout } from './components/layout/Layout';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -33,7 +34,9 @@ function App() {
                         <Route element={<Layout />}>
                             <Route path="/" element={<HomePage />} />
                             <Route path="/publish" element={<PublishRidePage />} />
+                            <Route path="/publish" element={<PublishRidePage />} />
                             <Route path="/search" element={<SearchResultsPage />} />
+                            <Route path="/help" element={<HelpCenterPage />} />
 
                             {/* Protected User Routes */}
                             <Route element={<ProtectedRoute />}>
