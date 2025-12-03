@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 
@@ -8,8 +8,20 @@ export const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
+    const { login, user } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Get the 'next' param from the URL
+    const searchParams = new URLSearchParams(location.search);
+    const next = searchParams.get('next') || '/';
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (user) {
+            navigate(next);
+        }
+    }, [user, navigate, next]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,7 +30,9 @@ export const LoginPage = () => {
         try {
             const response = await api.post('/auth/login', { email, password });
             login(response.data.access_token, response.data.user);
-            navigate('/');
+            // Navigation will be handled by the useEffect above when user state updates, 
+            // or we can do it here to be faster.
+            navigate(next);
         } catch (err: any) {
             console.error('Login error:', err);
             if (err.response?.status === 401) {

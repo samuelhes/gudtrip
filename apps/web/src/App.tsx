@@ -17,6 +17,7 @@ import { PublishRideArticle } from './pages/help/articles/PublishRideArticle';
 import { Layout } from './components/layout/Layout';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { RequireAuth } from './components/auth/RequireAuth';
 import { AdminRoute } from './components/auth/AdminRoute';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
@@ -35,8 +36,16 @@ function App() {
                         {/* Public Routes with Navbar */}
                         <Route element={<Layout />}>
                             <Route path="/" element={<HomePage />} />
-                            <Route path="/publish" element={<PublishRidePage />} />
-                            <Route path="/publish" element={<PublishRidePage />} />
+
+                            {/* Publicly accessible but protected by RequireAuth internally if needed, 
+                                or we wrap it here. The requirement is: 
+                                "Si el usuario no está logueado y hace clic en 'Crear viaje'... Redirigirlo a login"
+                                So accessing /publish directly should also redirect.
+                            */}
+                            <Route element={<RequireAuth />}>
+                                <Route path="/publish" element={<PublishRidePage />} />
+                            </Route>
+
                             <Route path="/search" element={<SearchResultsPage />} />
                             <Route path="/help" element={<HelpCenterPage />} />
                             <Route path="/help/request-ride" element={<RequestRideArticle />} />

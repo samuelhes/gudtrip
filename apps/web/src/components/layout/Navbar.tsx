@@ -21,11 +21,11 @@ export const Navbar = () => {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-4">
+                        <Link to="/publish" className="text-gray-700 hover:text-blue-600 font-medium">
+                            Publicar Viaje
+                        </Link>
                         {user ? (
                             <>
-                                <Link to="/publish" className="text-gray-700 hover:text-blue-600 font-medium">
-                                    Publicar Viaje
-                                </Link>
                                 <Link to="/wallet" className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1">
                                     <span className="text-xl">💰</span>
                                     <span>Billetera</span>
@@ -48,10 +48,7 @@ export const Navbar = () => {
                         ) : (
                             <>
                                 <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium">
-                                    Iniciar Sesión
-                                </Link>
-                                <Link to="/register" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                    Registrarse
+                                    Entrar / Registrarse
                                 </Link>
                             </>
                         )}
@@ -124,18 +121,18 @@ export const Navbar = () => {
                         ) : (
                             <>
                                 <Link
+                                    to="/publish"
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 active:bg-gray-50 active:text-blue-600"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Publicar Viaje
+                                </Link>
+                                <Link
                                     to="/login"
                                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 active:bg-gray-50 active:text-blue-600"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
-                                    Iniciar Sesión
-                                </Link>
-                                <Link
-                                    to="/register"
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 font-bold active:bg-blue-50"
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    Registrarse
+                                    Entrar / Registrarse
                                 </Link>
                             </>
                         )}
