@@ -15,8 +15,9 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Build API
+# Build API and Web
 RUN npm run build -w apps/api
+RUN npm run build -w apps/web
 
 # Production stage
 FROM node:20-alpine
@@ -28,6 +29,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/package.json ./apps/api/
+COPY --from=builder /app/apps/web/dist ./apps/api/client
 
 # Set environment variables
 ENV NODE_ENV=production

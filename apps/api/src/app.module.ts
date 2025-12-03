@@ -2,6 +2,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
@@ -18,6 +20,10 @@ import { DocumentsModule } from './documents/documents.module';
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'client'),
+            exclude: ['/api/(.*)'],
+        }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => ({
