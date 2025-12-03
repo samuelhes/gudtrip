@@ -10,26 +10,8 @@ services:
     envVars:
       - key: PORT
         value: 3000
-      - key: DB_HOST
-        fromDatabase:
-          name: gudtrip-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: gudtrip-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: gudtrip-db
-          property: database
-      - key: DB_USER
-        fromDatabase:
-          name: gudtrip-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: gudtrip-db
-          property: password
+      - key: DATABASE_URL
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: SMTP_HOST
@@ -41,14 +23,12 @@ services:
       - key: SMTP_PASS
         sync: false
 
-
-
-databases:
-  - name: gudtrip-db
-    databaseName: gudtrip
-    user: gudtrip_user
-    plan: free
-    region: oregon
+# databases:
+#   - name: gudtrip-db
+#     databaseName: gudtrip
+#     user: gudtrip_user
+#     plan: free
+#     region: oregon
 
 # Redis is not available on free tier blueprints directly as a managed service in the same way, 
 # but for this example we assume it is or we use an internal redis if needed. 
