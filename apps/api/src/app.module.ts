@@ -26,17 +26,32 @@ import { DocumentsModule } from './documents/documents.module';
         }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-                type: 'postgres',
-                host: configService.get<string>('DB_HOST', 'localhost'),
-                port: configService.get<number>('DB_PORT', 5432),
-                username: configService.get<string>('DB_USER', 'gudtrip'),
-                password: configService.get<string>('DB_PASSWORD', 'gudtrip_password'),
-                database: configService.get<string>('DB_NAME', 'gudtrip_db'),
-                autoLoadEntities: true,
-                synchronize: true, // Auto-create tables (dev only)
-                ssl: configService.get<string>('DB_SSL', 'true') === 'true' ? { rejectUnauthorized: false } : false,
-            }),
+            useFactory: (configService: ConfigService) => {
+                const dbUrl = configService.get<string>('DATABASE_URL');
+                const ssl = configService.get<string>('DB_SSL', 'true') === 'true';
+
+                if (dbUrl) {
+                    return {
+                        type: 'postgres',
+                        url: dbUrl,
+                        autoLoadEntities: true,
+                        synchronize: true, // Auto-create tables (dev only)
+                        ssl: ssl ? { rejectUnauthorized: false } : false,
+                    };
+                }
+
+                return {
+                    type: 'postgres',
+                    host: configService.get<string>('DB_HOST', 'localhost'),
+                    port: configService.get<number>('DB_PORT', 5432),
+                    username: configService.get<string>('DB_USER', 'gudtrip'),
+                    password: configService.get<string>('DB_PASSWORD', 'gudtrip_password'),
+                    database: configService.get<string>('DB_NAME', 'gudtrip_db'),
+                    autoLoadEntities: true,
+                    synchronize: true, // Auto-create tables (dev only)
+                    ssl: ssl ? { rejectUnauthorized: false } : false,
+                };
+            },
             inject: [ConfigService],
         }),
         UsersModule,
